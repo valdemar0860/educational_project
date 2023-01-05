@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form action="/student/form/create" method="POST">
+    <!-- добавляем токен -->
+    {% csrf_token %}
+    <!-- добавляем форму -->
+    {{ student_form }}
+    <input type="submit">
+</form>
+
+</body>
+</html>
