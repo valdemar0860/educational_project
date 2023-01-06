@@ -79,7 +79,7 @@ def update_student(request, id):
         student_form = StudentForm(instance=student)
 
         context = {
-            'student_id': student.id,
+            'id': student.id,
             'form': student_form,
         }
 

@@ -8,7 +8,7 @@
 
 <ul>
     {% for student in students %}
-        <li><a href="/students/update/{{ student.id }}"> {{ student.name }} </a></li>
+        <li><a href="{% url 'update_student' id=student.id %}"> {{ student.name }} </a></li>
     {% endfor %}
 </ul>
 
