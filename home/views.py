@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.views import View
 
 from home.forms import StudentForm
 from home.models import Student
@@ -72,30 +73,88 @@ def create_student_by_form(request):
         return redirect('/students/form/create')
 
 
-def update_student(request, id):
-    if request.method == 'GET':
-        student = Student.objects.get(id=id)
+# def update_student(request, id):
+#     if request.method == 'GET':
+#         student = Student.objects.get(id=id)
+#
+#         student_form = StudentForm(instance=student)
+#
+#         context = {
+#             'id': student.id,
+#             'form': student_form,
+#         }
+#
+#         return render(
+#             request,
+#             'update.html',
+#             context=context
+#         )
+#
+#     elif request.method == 'POST':
+#
+#         student = Student.objects.get(id=id)
+#
+#         student_form = StudentForm(request.POST, instance=student)
+#
+#         if student_form.is_valid():
+#             student_form.save()
+#
+#         return redirect('update_student', id)
+class UpdateStudentView(View):
+    def get_student(self, id):
+        try:
+            self.student = Student.objects.get(id=id)
+        except Student.DoesNotExist:
+            self.student = None
+        except Student.MultipleObjectsReturned:
+            self.student = None
 
-        student_form = StudentForm(instance=student)
+    def get(self, request):
+        self.get_student(id)
+
+        student_form = StudentForm(instance=self.student)
 
         context = {
-            'id': student.id,
             'form': student_form,
+            'id': self.student.id,
         }
 
         return render(
             request,
             'update.html',
-            context=context
+            context=context,
         )
 
-    elif request.method == 'POST':
+    def post(self, request):
+        self.get_student(id)
 
-        student = Student.objects.get(id=id)
-
-        student_form = StudentForm(request.POST, instance=student)
+        student_form = StudentForm(request.POST, instance=self.student)
 
         if student_form.is_valid():
             student_form.save()
 
-        return redirect(f'/students/update/{student.id}')
+        return redirect('update_student', id)
+
+
+class HomeView(View):
+    def get(self, request):
+        students = Student.objects.all()
+
+        student_form = StudentForm()
+
+        context = {
+            'students': students,
+            'form': student_form,
+        }
+
+        return render(
+            request,
+            'index.html',
+            context=context,
+        )
+
+    def post(self, request):
+        student_form = StudentForm(request.POST)
+
+        if student_form.is_valid():
+            student_form.save()
