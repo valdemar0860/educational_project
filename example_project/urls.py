@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from home.views import show_all_students, create_student, create_student_by_form
+from home.views import show_all_students, create_student, create_student_by_form, update_student
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,5 +25,6 @@ urlpatterns = [
     #        |               |                          |
     path('students/', show_all_students,               name='students_list'),
     path('students/create', create_student, name='students_create'),
+    path('students/update/<id>', update_student, name='update_student'),
     path('students/form/create', create_student_by_form, name='students_form_create'),
 ]

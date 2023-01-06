@@ -3,16 +3,12 @@ from django.shortcuts import render, redirect
 
 from home.forms import StudentForm
 from home.models import Student
-from faker import Faker
+
 
 def show_all_students(request):
     """
     Show all students in template
     """
-    # faker = Faker()
-    # for i in range(10):
-    #     student = Student()
-    #     student.name = faker.name()
     # выбрать всех студентов из таблицы students(джанго сама
     # дописывает `s` в окончании таблицы, но модели всегда должны
     # быть в единственном числе)
@@ -74,3 +70,32 @@ def create_student_by_form(request):
             student_form.save()
 
         return redirect('/students/form/create')
+
+
+def update_student(request, id):
+    if request.method == 'GET':
+        student = Student.objects.get(id=id)
+
+        student_form = StudentForm(instance=student)
+
+        context = {
+            'student_id': student.id,
+            'form': student_form,
+        }
+
+        return render(
+            request,
+            'update.html',
+            context=context
+        )
+
+    elif request.method == 'POST':
+
+        student = Student.objects.get(id=id)
+
+        student_form = StudentForm(request.POST, instance=student)
+
+        if student_form.is_valid():
+            student_form.save()
+
+        return redirect(f'/students/update/{student.id}')
