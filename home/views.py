@@ -109,7 +109,8 @@ class UpdateStudentView(View):
         except Student.MultipleObjectsReturned:
             self.student = None
 
-    def get(self, request):
+    def get(self, request, id):
+
         self.get_student(id)
 
         student_form = StudentForm(instance=self.student)
@@ -125,7 +126,7 @@ class UpdateStudentView(View):
             context=context,
         )
 
-    def post(self, request):
+    def post(self, request, id):
         self.get_student(id)
 
         student_form = StudentForm(request.POST, instance=self.student)
@@ -137,7 +138,8 @@ class UpdateStudentView(View):
 
 
 class HomeView(View):
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
+
         students = Student.objects.all()
 
         student_form = StudentForm()
