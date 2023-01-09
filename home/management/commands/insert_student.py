@@ -5,6 +5,8 @@ from home.models import Student
 
 
 # имя файла является название команды
+# from home.signals import student_done
+
 
 class Command(BaseCommand):
 
@@ -32,6 +34,11 @@ class Command(BaseCommand):
             student = Student()
             # faker имеет большое количество разной генерируемой информации один из них name()
             student.name = faker.name()
-            self.stdout.write(student.name)
+            student.sex = faker.simple_profile()['sex']
+            student.address = faker.address()
+            student.description = faker.text()
+
+            # student_done.send(sender=Student)
+            # student.send_name()
             student.save()
         self.stdout.write('End inserting Students')
